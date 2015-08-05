@@ -1,0 +1,41 @@
+.round-border {
+
+    border: 1px solid;
+    width: 640px;
+    height: 480px;
+    float: left;
+}
+
+.thumb {
+    width: 150px;
+    height: 150px;
+}
+
+.container {
+    width: 900px;
+    margin: 0 auto;
+
+}
+
+.caption-border {
+    width: 640px;
+    height: 480px;
+}
+
+.display {
+    width: 640px;
+    height: 480px;
+    float: left;
+}
+
+.side {
+    width: 150px;
+    height: 480px;
+    float: left;
+}
+
+.inner {
+    width: 150px;
+    height:150px;
+    float: left;
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>w6d3 - Instagram API</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="api.css" rel="stylesheet">
+</head>
+
+    <div class="col-md-4"><input type="text" id="search" class="form-control"></div>
+    <button id="runMe" class="btn btn-warning">Let's Go!</button>
+
+    <div class="container">
+        <div id="display" >
+            <img class="round-border" src="https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/s640x640/e15/11324481_442124539300566_69407652_n.jpg"></img>
+        </div>
+        <div id="sidebar" class="side">
+            <div id="box1" class="inner"></div>
+            <div id="box2" class="inner"></div>
+            <div id="box3" class="inner"></div>
+        </div>
+    </div>
+
+    <div id="caption" class="center"></div>
+
+
+<script>
+
+
+    $(document).ready(function(){
+        console.log('ready!');
+
+        var images = [];
+        var text = [];
+        var profile = [];
+        var link = [];
+        var sI;
+
+        $("#runMe").click(function(){
+            event.preventDefault();
+            clearInterval(sI); //stop previously running function
+            images = []; //clear previous array
+            text = []; //clear previous text
+
+            var search = $("#search").val();
+            var searchString = 'https://api.instagram.com/v1/tags/' + search + '/media/recent?client_id=37e2dbecf6a642dbb505b9bf270d4c76';
+
+            $.ajax({
+                type      : 'GET',
+                url       : searchString,
+                dataType  : 'jsonp'
+            })
+
+            .error(function(data){
+                console.log('something went wrong!');
+                console.log(data);
+            })
+
+            .done(function(data) {
+                console.log('looks okay!');
+                //console.log(data);
+                $.each(data.data, function(index, stuff){
+                    images.push(stuff.images.standard_resolution.url);
+                    text.push(stuff.caption.text);
+                    profile.push(stuff.user);
+                    link.push(stuff.link);
+                    console.log(stuff.images.standard_resolution.url);
+
+                });
+                loopy(images, text, profile, link);
+
+            });
+
+            function loopy(images, text, profile, link){
+                var index = 0;
+                var index2 = 1;
+                sI = setInterval(function(){
+                    if (index <= images.length) { //for main image
+                        index++;
+                    } else {
+                        index = 0;
+                    }
+
+                    $("#display").empty();
+                    $("#caption").empty();
+                    $("#box1").empty();
+                    $("#box2").empty();
+                    $("#box3").empty();
+
+                    $("#display").append("<img class='round-border center' src='" + images[index] + "'></img>");
+                    $("#caption").append("<span class='caption-border center'>" + text[index] + "</span>");
+                    $("#box1").append("<img class='thumb' src='" + profile[index].profile_picture + "'></img>");
+                    $("#box2").append("<p>User: " + profile[index].username + "</p><p>Name: " + profile[index].full_name + "</p>");
+                    $("#box3").append("<a href='"+ link[index] +"'>Original Post</a>");
+                },3000);
+            };
+
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
